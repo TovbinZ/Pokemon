@@ -1,9 +1,12 @@
 import gradio as gr
 import pokepy
-import openai
+from openai import OpenAI
 import json
 
-openai.api_key = "OPENAI API key"
+OpenAI.api_key = "OPENAI API key"
+
+client = OpenAI()
+
 
 class Logic(): 
 
@@ -12,7 +15,7 @@ class Logic():
 
         Question = f"{Pokemon1} and {Pokemon2}"
 
-        Chat = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
           model="gpt-4",
           messages=[
                 {"role": "system", "content": 'You are a Pokemon Expert. You will be given 2 Pokemon at equal level and using your vast knowledge of Pokemon. You will tell who will most likely win in a 1v1 battle and why. Give a concise answer. Answer with a python dictionary with the exact keys "Winner"  and "Reasoning"'},
@@ -21,7 +24,7 @@ class Logic():
             ]
         )
 
-        return Chat['choices'][0]['message']['content']
+        return response.choices[0].message.content
 
 
     def PokemonID(Input):
